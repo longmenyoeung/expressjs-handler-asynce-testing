@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 //connection URL
-const uri = "mongodb+srv://lovenith2020_db_user:z2L9uGEiWRoFVsBN@cluster0.kybzamt.mongodb.net/?appName=Cluster0";
+const uri = process.env.MONGODB_ATLAS;
 
 const connectDB = async () => {
     try {
