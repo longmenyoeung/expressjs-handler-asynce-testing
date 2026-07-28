@@ -33,7 +33,8 @@ exports.findBookById = asyncHandler (async (req, res) => {
 
     return res.status(200).json({
         success: true,
-        message: 'Book have been found'
+        message: 'Book have been found',
+        data : book
     });
 
 });

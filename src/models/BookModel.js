@@ -15,7 +15,7 @@ const boookSchema = new mongoose.Schema({
     },
     category : {
         type: String,
-        enum :['Math', 'Enlish', 'History', 'Java'],
+        enum :['Math', 'English', 'History', 'Java'],
         required: true
     },
     publishYear : {
