@@ -10,7 +10,7 @@ const brandRoute = require("./src/routes/brand.route");
 
 
 //PORT 
-const PORT = 3000
+const PORT = process.env.PORT1  || process.env.PORT2
 
 //middleware
 app.use(express.json());
@@ -37,5 +37,5 @@ app.use((err, req, res, next) =>{
 // ===============================
 
 app.listen(PORT,() => {
-    console.log(`Server running on port :${PORT}`);
+    console.log(`Server running on http://localhost${PORT}`);
 });
