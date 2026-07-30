@@ -88,4 +88,4 @@ exports.sortPriceAsc = asyncHandler(async(req, res) => {
         message : 'Sort by price ASC successfully.',
         data : book
     });
-})
+});
