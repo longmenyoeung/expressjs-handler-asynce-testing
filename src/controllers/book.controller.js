@@ -68,4 +68,24 @@ exports.deleteBookById  = asyncHandler (async (req, res) => {
         message: 'Book deleted successfully.',
         data : book
     })
+});
+
+exports.sortPriceDesc = asyncHandler(async(req, res) => {
+    const book = await BookModel.find().sort({price: -1}).limit(5); //ASC
+
+    return res.status(200).json({
+        success : true,
+        message : 'Sort by price ASC successfully.',
+        data : book
+    });
+});
+
+exports.sortPriceAsc = asyncHandler(async(req, res) => {
+    const book = await BookModel.find().sort({price: 1}); //DESC
+    
+    return res.status(200).json({
+        success : true,
+        message : 'Sort by price ASC successfully.',
+        data : book
+    });
 })

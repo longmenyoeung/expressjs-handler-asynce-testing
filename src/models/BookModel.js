@@ -1,5 +1,5 @@
 const { default: mongoose } = require("mongoose");
-const { getYear, getRating } = require("../validator/BookModelValidate");
+const { getYear, getRating, checkPrice } = require("../validator/BookModelValidate");
 
 
 const boookSchema = new mongoose.Schema({
@@ -15,7 +15,7 @@ const boookSchema = new mongoose.Schema({
     },
     category : {
         type: String,
-        enum :['Math', 'English', 'History', 'Java'],
+        enum :['Math', 'English', 'History', 'Java', 'Program'],
         required: true
     },
     publishYear : {
@@ -40,7 +40,7 @@ const boookSchema = new mongoose.Schema({
         type :Number,
         required: true,
         min: 0,
-        default: 0
+        default: 0,
     },
     stock : {
         type : Number,

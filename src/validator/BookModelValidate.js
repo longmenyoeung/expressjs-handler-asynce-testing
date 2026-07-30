@@ -7,3 +7,4 @@ exports.getYear = (year) => {
 exports.getRating = (rating) => {
     return rating >=0 && rating <= 5;
 }
+
