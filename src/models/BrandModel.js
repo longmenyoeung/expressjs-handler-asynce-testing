@@ -3,10 +3,11 @@ const { default: mongoose } = require("mongoose");
 const { collection } = require("./BookModel");
 
 
-const brandModel = mongoose.Schema({
+const brandSchema = new mongoose.Schema({
     brand_name: {
         type : String,
-        required: true,
+        required: [true, 'Brand name field is required.'],
+        unique: true,
         trim: true
     },
     isActive : {
@@ -14,12 +15,13 @@ const brandModel = mongoose.Schema({
         default: true
     },
     description : {
-        type: Text
+        type: String,
+        trim: true
     }
 },{
     Timestamp: true,
     collection: 'brands'
 });
 
-const brandModel = mongoose.model('Brand', brandModel);
-module.exports = brandModel;
+const BrandModel = mongoose.model('Brand', brandSchema);
+module.exports = BrandModel;

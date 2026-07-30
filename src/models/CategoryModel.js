@@ -2,10 +2,11 @@ const { Timestamp } = require("mongodb");
 const { default: mongoose } = require("mongoose");
 const { collection } = require("./BookModel");
 
-const categorySchema = mongoose.Schema({
+const categorySchema = new mongoose.Schema({
     name : {
         type: String,
         required : true,
+        unique: true,
         trim : true
     },
     isActive : {
@@ -17,5 +18,5 @@ const categorySchema = mongoose.Schema({
     collection : 'categoies'
 });
 
-const categoryModel = mongoose.model('Category', categorySchema);
-module.exports = categoryModel;
+const CategoryModel = mongoose.model('Category', categorySchema);
+module.exports = CategoryModel;

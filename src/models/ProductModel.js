@@ -3,7 +3,7 @@ const { default: mongoose } = require("mongoose");
 const { collection } = require("./BookModel");
 
 
-const productSchema = mongoose.Schema({
+const productSchema = new mongoose.Schema({
     name:  {
         type : String,
         required: true,
@@ -21,7 +21,8 @@ const productSchema = mongoose.Schema({
         required: true
     },
     description : {
-        type: Text,
+        type: String,
+        trim: true
     },
     price : {
         type : Number,
@@ -38,5 +39,5 @@ const productSchema = mongoose.Schema({
     collection: 'products'
 });
 
-const productModel = mongoose.model('Product', productSchema);
-module.exports =productModel;
+const ProductModel = mongoose.model('Product', productSchema);
+module.exports = ProductModel;

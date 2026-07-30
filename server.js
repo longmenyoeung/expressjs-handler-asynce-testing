@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const helmet  =require('helmet');
 const userRouter = require('./src/routes/user.route');
 const bookRoute = require("./src/routes/book.route");
+const brandRoute = require("./src/routes/brand.route");
 
 
 //PORT 
@@ -22,6 +23,7 @@ connectDB();
 //router
 app.use('/api/users', userRouter);
 app.use('/api/books', bookRoute);
+app.use('/api/brands', brandRoute);
 
 
 //5. Error-Handling Middleware ===
