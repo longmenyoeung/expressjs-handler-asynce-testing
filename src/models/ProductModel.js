@@ -6,19 +6,20 @@ const { collection } = require("./BookModel");
 const productSchema = new mongoose.Schema({
     name:  {
         type : String,
-        required: true,
+        required: [true, 'Name field is required.'],
         trim : true
     },
     category_id: {
         type : mongoose.Schema.Types.ObjectId,
         ref: 'Category',
         required: true,
-        // index : true
+        index : true
     },
     brand_id : {
         type : mongoose.Schema.Types.ObjectId,
         ref: 'Brand',
-        required: true
+        required: true,
+        index: true
     },
     description : {
         type: String,
@@ -26,7 +27,7 @@ const productSchema = new mongoose.Schema({
     },
     price : {
         type : Number,
-        required : true,
+        required : [true,],
         default: 0
     },
     stock : {

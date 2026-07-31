@@ -24,5 +24,12 @@
 -search brand  -get /api/brand/:brandId
 -Update brand  -PUT /api/brand/:brandId
 -Delete brand  -DELETE /api/brand/:brandId
+-->
 
+<!--  ============= Categories route ===================
+-Get all categories  -GET /api/categories
+-Create categories  -POST /api/categories
+-search categories  -get /api/categories/:categoriesId
+-Update categories  -PUT /api/categories/:categoriesId
+-Delete categories  -DELETE /api/categories/:categoriesId
 -->

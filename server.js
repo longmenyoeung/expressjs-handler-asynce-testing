@@ -7,23 +7,28 @@ const helmet  =require('helmet');
 const userRouter = require('./src/routes/user.route');
 const bookRoute = require("./src/routes/book.route");
 const brandRoute = require("./src/routes/brand.route");
+const categoryRoute = require("./src/routes/category.route");
+const productRoute = require("./src/routes/product.route");
 
 
 //PORT 
 const PORT = process.env.PORT1  || process.env.PORT2
 
 //middleware
-app.use(express.json());
+app.use(express.json()); //json 
 app.use(express.urlencoded({extended:true}));
 app.use(morgan('combined')); //use it check requast 
 app.use(helmet()); // make it more security
 
+//connection with DB
 connectDB();
 
 //router
 app.use('/api/users', userRouter);
 app.use('/api/books', bookRoute);
 app.use('/api/brands', brandRoute);
+app.use('/api/categories', categoryRoute);
+app.use('/api/products', productRoute);
 
 
 //5. Error-Handling Middleware ===
