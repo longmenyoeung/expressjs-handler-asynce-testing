@@ -6,8 +6,8 @@ const BrandModel = require('../models/BrandModel');
 exports.getAllProuct = asyncHandler (async (req, res) => {
 
     const products = await ProductModel.find({})
-                                        .populate('category_id')
-                                        .populate('brand_id')
+                                        .populate('category_id', 'name')
+                                        .populate('brand_id', 'brand_name')
 
     if(products.length === 0) {return res.status(400).json({message: 'Product is empty.', data : []})}
 
@@ -102,3 +102,21 @@ exports.deleteProduct = asyncHandler (async (req, res) => {
 
 });
 
+exports.sortByPriceASC = asyncHandler (async (req, res) => {
+    const product = await ProductModel.find().sort({price : 1}); // ASC
+
+    return res.status(200).json({
+        success : true,
+        message: 'Sorted by price asc',
+        data : product
+    });
+});
+
+exports.sortByPriceDESC  = asyncHandler (async (req, res) => {
+    const product = await ProductModel.find().sort({price : -1}); //DESC
+    return res.status(200).json({
+        success : true,
+        message: 'Sorted by price desc',
+        data : product
+    });
+})
