@@ -1,4 +1,5 @@
 const { default: mongoose } = require("mongoose");
+const mongoosePaginate  = require('mongoose-paginate-v2');
 const { ageValidate } = require("../validator/UserModelValidate");
 
 const userSchema  = new mongoose.Schema({
@@ -14,10 +15,10 @@ const userSchema  = new mongoose.Schema({
     },
     age: {
         type: Number,
-        validate: {
-            validator : ageValidate,
-            message : 'Age must be between 18 and 100'
-        }
+        // validate: {
+        //     validator : ageValidate,
+        //     message : 'Age must be between 18 and 100'
+        // }
     },
     isActive : {
         type: Boolean,
@@ -28,6 +29,9 @@ const userSchema  = new mongoose.Schema({
     timestamps: true,
     collection: 'users'
 });
+
+//add paginate plugin
+userSchema.plugin(mongoosePaginate);
 
 //create model from shema
 const UserModel  =  mongoose.model('User', userSchema);

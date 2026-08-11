@@ -1,6 +1,8 @@
 const { Timestamp } = require("mongodb");
 const { default: mongoose } = require("mongoose");
 const { collection } = require("./BookModel");
+const mongoosePaginate  = require('mongoose-paginate-v2')
+
 
 
 const productSchema = new mongoose.Schema({
@@ -35,10 +37,14 @@ const productSchema = new mongoose.Schema({
         required: true,
         default : 0
     }
+    //note add more
+    // -qty -isStock
 },{
     Timestamp : true,
     collection: 'products'
 });
+
+productSchema.plugin(mongoosePaginate);
 
 const ProductModel = mongoose.model('Product', productSchema);
 module.exports = ProductModel;

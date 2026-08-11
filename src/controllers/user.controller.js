@@ -4,6 +4,7 @@ const asyncHandler = require("express-async-handler");
 exports.createUser = asyncHandler ( async (req, res) => {
 
     const {name, email, age} = req.body;
+    
     const user = UserModel({name, email, age});
     await user.save();
     
@@ -16,13 +17,20 @@ exports.createUser = asyncHandler ( async (req, res) => {
 });
 
 exports.getAlluser  = asyncHandler (async (req, res) => {
-    const users = await UserModel.find({isActive: true});
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    
+    const age  = parseInt(req.query.age);
+    const isActive  = req.query.isActive;
+    const query = {};
+    if(req.query.age) query.age = age;
+    if(req.query.isActive) query.isActive = isActive;
 
-    return res.status(200).json({
-        success : true,
-        message: 'Get all users successfully',
-        data : users
+    const result = await UserModel.paginate(query, {
+        page,
+        limit
     });
+    res.status(200).json(result);
 });
 
 exports.findUserById = asyncHandler (async (req, res) => {
