@@ -1,4 +1,4 @@
-const {body} = require('express-validator');
+const {body, query} = require('express-validator');
 const {validate} = require('./validate')
 
 exports.createUservalidation = [
@@ -34,5 +34,20 @@ exports.updateUservalidation = [
     .optional()
     .isInt({min:18, max:100})
     .withMessage("Age must be between 18 to 100"),
+    validate
+]
+
+
+exports.getListuserValiation = [
+    query('page')
+    .optional()
+    .isInt({min:1})
+    .toInt(),
+
+    query('limit')
+    .optional()
+    .isInt({min:1, max:100})
+    .toInt(),
+
     validate
 ]

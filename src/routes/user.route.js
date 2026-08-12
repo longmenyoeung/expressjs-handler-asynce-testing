@@ -8,9 +8,14 @@ const {
 } = require("../controllers/user.controller");
 const userRouter = express.Router();
 const { body } = require("express-validator");
-const { createUservalidation, updateUservalidation } = require("../middleware/userValidator");
+const { createUservalidation, updateUservalidation, getListuserValiation } = require("../middleware/userValidator");
 
-userRouter.get("/", getAlluser);
+userRouter.get(
+    "/",
+    getListuserValiation,
+    getAlluser
+);
+
 userRouter.get("/:userId", findUserById);
 userRouter.post(
     "/",
