@@ -2,6 +2,9 @@ const dotenv = require("dotenv/config");
 const express = require("express");
 const connectDB = require("./src/config/db");
 const cloudinary = require("cloudinary").v2;
+// const aws = require("aws-sdk");
+const { S3Client } = require("@aws-sdk/client-s3");
+const multerS3 = require("multer-s3");
 const app = express();
 const morgan = require("morgan");
 const helmet = require("helmet");
@@ -15,6 +18,15 @@ const path = require("path");
 
 //cloudinaryBufer
 const storageBuffer = new multer.memoryStorage();
+
+//aws testing config
+const s3 = new S3Client({
+    region: process.env.AWS_REGION,
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    },
+});
 
 //1 upload image
 const storage = multer.diskStorage({
@@ -60,6 +72,29 @@ const uploads = multer({
     fileFilter: filefilter,
 });
 
+// aws S3 storage
+const uploadS3 = multer({
+    storage: multerS3({
+        s3: s3,
+        bucket: process.env.AWS_BUCKET_NAME,
+        // acl: "public-read",
+        metadata: function (req, file, cb) {
+            cb(null, { fieldName: file.fieldname });
+        },
+        key: function (req, file, cb) {
+            const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+            cb(null, "uploads/" + uniqueSuffix + path.extname(file.originalname));
+        },
+    }),
+    limits: { fileSize: 5 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith("image/")) {
+            cb(null, true);
+        } else {
+            cb(new Error("Only images allowed"));
+        }
+    },
+});
 //PORT
 const PORT = process.env.PORT1 || process.env.PORT2;
 
@@ -85,6 +120,8 @@ const handleUpload = async (file) => {
     });
     return res;
 };
+//=======================
+
 
 //router
 app.use("/api/users", userRouter);
@@ -105,14 +142,15 @@ app.post("/upload-single", uploads.single("file"), (req, res) => {
     });
 });
 // --> with cloudinary
-app.post("/upload-single-clouinary", uploads.single("my_file"),
+app.post(
+    "/upload-single-clouinary",
+    uploads.single("my_file"),
     async (req, res) => {
         try {
             const b64 = Buffer.from(req.file.buffer).toString("base64");
             let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
             const cldRes = await handleUpload(dataURI);
             res.json(cldRes);
-            
         } catch (error) {
             console.log(error);
             res.send({
@@ -121,6 +159,28 @@ app.post("/upload-single-clouinary", uploads.single("my_file"),
         }
     },
 );
+
+// --> with aws s3
+app.post("/upload-s3", uploadS3.single("image"), (req, res) => {
+    // console.log("========== UPLOAD DEBUG ==========");
+    // console.log("Content-Type:", req.headers["content-type"]);
+    // console.log("Body:", req.body);
+    // console.log("File:", req.file);
+    // console.log("==================================");
+
+    if(!req.file) {
+        return res.status(400).json({
+            success: false,
+            message: "No file uploaded"
+        });
+    }
+
+    res.json({
+        success: true,
+        message: "File uploaded to S3",
+        url: req.file.location, // S3 URL
+    });
+});
 
 app.post("/upload-multiple", uploads.array("file", 5), (req, res) => {
     console.log(req.files);
@@ -136,13 +196,12 @@ app.post("/upload-multiple", uploads.array("file", 5), (req, res) => {
     });
 });
 
-app.post(
-    "/upload-fields",
-    uploads.fields([
+app.post("/upload-fields",uploads.fields([
         { name: "file", maxCount: 4 },
         { name: "photos", maxCount: 4 },
     ]),
     (req, res) => {
+
         console.log(req.files.file[0]);
         console.log(req.files.photos[0]);
 
