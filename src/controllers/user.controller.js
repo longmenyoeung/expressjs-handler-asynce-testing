@@ -17,6 +17,7 @@ exports.createUser = asyncHandler ( async (req, res) => {
 });
 
 exports.getAlluser  = asyncHandler (async (req, res) => {
+    
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     
@@ -31,6 +32,7 @@ exports.getAlluser  = asyncHandler (async (req, res) => {
         limit
     });
     res.status(200).json(result);
+
 });
 
 exports.findUserById = asyncHandler (async (req, res) => {
@@ -45,7 +47,7 @@ exports.findUserById = asyncHandler (async (req, res) => {
         data : user
     });
 
-})
+});
 
 exports.updatUserById = asyncHandler (async (req, res) => {
     
@@ -79,5 +81,5 @@ exports.deleteUserById = asyncHandler (async (req, res) => {
         success : true,
         message  :'User deleted succesfully.',
         data : user
-    })
-})
+    });
+});
