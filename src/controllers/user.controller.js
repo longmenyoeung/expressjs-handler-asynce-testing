@@ -3,9 +3,9 @@ const asyncHandler = require("express-async-handler");
 
 exports.createUser = asyncHandler ( async (req, res) => {
 
-    const {name, email, age} = req.body;
+    const {name, email, age, profile} = req.body;
     
-    const user = UserModel({name, email, age});
+    const user = UserModel({name, email, age, profile});
     await user.save();
     
     return res.status(201).json({

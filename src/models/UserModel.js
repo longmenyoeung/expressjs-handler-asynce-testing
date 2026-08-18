@@ -13,6 +13,11 @@ const userSchema  = new mongoose.Schema({
         required: [true, 'Email is required.'],
         unique: true
     },
+    profile: {
+        type: mongoose.Types.ObjectId,
+        required: true,
+        ref: 'File'
+    },
     age: {
         type: Number,
         // validate: {

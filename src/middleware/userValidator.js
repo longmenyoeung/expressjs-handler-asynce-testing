@@ -18,6 +18,10 @@ exports.createUservalidation = [
     body("age")
         .isInt({ min: 18, max: 100 })
         .withMessage("Age must be between 18 to 100"),
+    body("profile")
+        .trim()
+        .isMongoId()
+        .withMessage("File must be mongoID"),
     validate
 ]
 

@@ -15,18 +15,19 @@ const categoryRoute = require("./src/routes/category.route");
 const productRoute = require("./src/routes/product.route");
 const multer = require("multer");
 const path = require("path");
+const fileRoute = require("./src/routes/file.route");
 
 //cloudinaryBufer
 const storageBuffer = new multer.memoryStorage();
 
 //aws testing config
-const s3 = new S3Client({
-    region: process.env.AWS_REGION,
-    credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    },
-});
+// const s3 = new S3Client({
+//     region: process.env.AWS_REGION,
+//     credentials: {
+//         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+//         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+//     },
+// });
 
 //1 upload image
 const storage = multer.diskStorage({
@@ -73,28 +74,28 @@ const uploads = multer({
 });
 
 // aws S3 storage
-const uploadS3 = multer({
-    storage: multerS3({
-        s3: s3,
-        bucket: process.env.AWS_BUCKET_NAME,
-        // acl: "public-read",
-        metadata: function (req, file, cb) {
-            cb(null, { fieldName: file.fieldname });
-        },
-        key: function (req, file, cb) {
-            const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-            cb(null, "uploads/" + uniqueSuffix + path.extname(file.originalname));
-        },
-    }),
-    limits: { fileSize: 5 * 1024 * 1024 },
-    fileFilter: (req, file, cb) => {
-        if (file.mimetype.startsWith("image/")) {
-            cb(null, true);
-        } else {
-            cb(new Error("Only images allowed"));
-        }
-    },
-});
+// const uploadS3 = multer({
+//     storage: multerS3({
+//         s3: s3,
+//         bucket: process.env.AWS_BUCKET_NAME,
+//          acl: "public-read",
+//         metadata: function (req, file, cb) {
+//             cb(null, { fieldName: file.fieldname });
+//         },
+//         key: function (req, file, cb) {
+//             const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+//             cb(null, "uploads/" + uniqueSuffix + path.extname(file.originalname));
+//         },
+//     }),
+//     limits: { fileSize: 5 * 1024 * 1024 },
+//     fileFilter: (req, file, cb) => {
+//         if (file.mimetype.startsWith("image/")) {
+//             cb(null, true);
+//         } else {
+//             cb(new Error("Only images allowed"));
+//         }
+//     },
+// });
 //PORT
 const PORT = process.env.PORT1 || process.env.PORT2;
 
@@ -129,6 +130,7 @@ app.use("/api/books", bookRoute);
 app.use("/api/brands", brandRoute);
 app.use("/api/categories", categoryRoute);
 app.use("/api/products", productRoute);
+app.use('/api/files', fileRoute);
 
 // 4============================ Kind of uploading image file
 // ---> with local
@@ -161,26 +163,21 @@ app.post(
 );
 
 // --> with aws s3
-app.post("/upload-s3", uploadS3.single("image"), (req, res) => {
-    // console.log("========== UPLOAD DEBUG ==========");
-    // console.log("Content-Type:", req.headers["content-type"]);
-    // console.log("Body:", req.body);
-    // console.log("File:", req.file);
-    // console.log("==================================");
+// app.post("/upload-s3", uploadS3.single("image"), (req, res) => {
 
-    if(!req.file) {
-        return res.status(400).json({
-            success: false,
-            message: "No file uploaded"
-        });
-    }
+//     if(!req.file) {
+//         return res.status(400).json({
+//             success: false,
+//             message: "No file uploaded"
+//         });
+//     }
 
-    res.json({
-        success: true,
-        message: "File uploaded to S3",
-        url: req.file.location, // S3 URL
-    });
-});
+//     res.json({
+//         success: true,
+//         message: "File uploaded to S3",
+//         url: req.file.location, 
+//     });
+// });
 
 app.post("/upload-multiple", uploads.array("file", 5), (req, res) => {
     console.log(req.files);
