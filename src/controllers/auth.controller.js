@@ -1,6 +1,9 @@
 const asyncHandler = require('express-async-handler');
 const UserModel = require('../models/UserModel');
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+
+
 exports.register = asyncHandler(async (req, res) => {
 
     const { name, email, password, age } = req.body;
@@ -22,9 +25,8 @@ exports.register = asyncHandler(async (req, res) => {
 
     
     await user.save();
-    
+
     const userRepsone = user.toObject();
-    console.log(userRepsone)
     delete userRepsone.password
 
     return res.status(201).json({
@@ -33,5 +35,46 @@ exports.register = asyncHandler(async (req, res) => {
     });
 
 
+});
 
+
+exports.login = asyncHandler(async (req, res) => {
+
+    const {email, password} = req.body;
+
+     //check email invalid or not
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+        return res.status(400).json({ message: 'Email or password incorrect.'});
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if(!isMatch){
+        return res.status(400).json({ message: 'Email or password incorrect.'});
+    }
+
+    //Verify or Sign token
+    const secret = process.env.JWT_SECRET;
+    const refresh_secret = process.env.JWT_REFRESH_SECRET;
+    const accessToken = jwt.sign(
+        {
+            sub:user._id, 
+            email:user.email
+        }, 
+        secret, 
+        {expiresIn: '15m'}
+    );
+    const refeshToken = jwt.sign(
+        {
+            sub:user._id, 
+            email:user.email
+        }, 
+        refresh_secret, 
+        {expiresIn: '3d'}
+    );
+
+    return res.status(200).json({
+        accessToken,
+        refeshToken
+    });
 })

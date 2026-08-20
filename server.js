@@ -17,6 +17,7 @@ const multer = require("multer");
 const path = require("path");
 const fileRoute = require("./src/routes/file.route");
 const authRoute = require("./src/routes/auth.route");
+const { verifyToken } = require("./src/middleware/authMiddilewar");
 
 //cloudinaryBufer
 const storageBuffer = new multer.memoryStorage();
@@ -126,11 +127,11 @@ const handleUpload = async (file) => {
 
 
 //router
-app.use("/api/users", userRouter);
+app.use("/api/users",verifyToken, userRouter);
 app.use("/api/books", bookRoute);
 app.use("/api/brands", brandRoute);
-app.use("/api/categories", categoryRoute);
-app.use("/api/products", productRoute);
+app.use("/api/categories",verifyToken, categoryRoute);
+app.use("/api/products",verifyToken, productRoute);
 app.use('/api/files', fileRoute);
 app.use('/api/auth', authRoute)
 
