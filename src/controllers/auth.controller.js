@@ -20,12 +20,16 @@ exports.register = asyncHandler(async (req, res) => {
         return res.status(400).json({ message: 'Email already existed.'});
     }
 
-
+    
     await user.save();
+    
+    const userRepsone = user.toObject();
+    console.log(userRepsone)
+    delete userRepsone.password
 
     return res.status(201).json({
         message :'User created',
-        user: user
+        user: userRepsone
     });
 
 
