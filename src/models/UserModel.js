@@ -15,7 +15,7 @@ const userSchema  = new mongoose.Schema({
     },
     profile: {
         type: mongoose.Types.ObjectId,
-        required: true,
+        // required: true,
         ref: 'File'
     },
     age: {
@@ -29,6 +29,11 @@ const userSchema  = new mongoose.Schema({
         type: Boolean,
         required: true,
         default : true
+    },
+    password : {
+        type:String,
+        required: true,
+        select: false
     }
 },{
     timestamps: true,

@@ -16,6 +16,7 @@ const productRoute = require("./src/routes/product.route");
 const multer = require("multer");
 const path = require("path");
 const fileRoute = require("./src/routes/file.route");
+const authRoute = require("./src/routes/auth.route");
 
 //cloudinaryBufer
 const storageBuffer = new multer.memoryStorage();
@@ -131,6 +132,7 @@ app.use("/api/brands", brandRoute);
 app.use("/api/categories", categoryRoute);
 app.use("/api/products", productRoute);
 app.use('/api/files', fileRoute);
+app.use('/api/auth', authRoute)
 
 // 4============================ Kind of uploading image file
 // ---> with local
